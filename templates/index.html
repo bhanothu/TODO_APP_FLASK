@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TaskMaster - To-Do List</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #001F3D; /* Navy blue shade */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #001F3D; /* Navy blue background for header matching body */
+            color: white;
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: none; /* No shadow for the heading */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+            margin-top: 80px;
+            box-sizing: border-box;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .container form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #003366; /* Navy blue */
+            outline: none;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background-color: #003366; /* Navy blue */
+            color: white;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #002a56; /* Darker navy blue */
+            transform: scale(1.05);
+        }
+
+        h2 {
+            margin-top: 30px;
+            font-size: 1.5em;
+            text-align: center;
+        }
+
+        .todo-item {
+            background: #001F3D; /* Navy blue background for task items */
+            color: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .todo-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .todo-item.done {
+            background: #001F3D; /* Navy blue for completed task */
+        }
+
+        .todo-item a {
+            color: white; /* White text for the links */
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .todo-item a:hover {
+            color: #00C8FF; /* Light blue on hover */
+        }
+
+        .checkmark {
+            margin-left: 10px;
+            font-size: 18px;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #003366; /* Navy blue */
+            color: white;
+            font-size: 24px;
+            border-radius: 50%;
+            padding: 20px;
+            cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin-top: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>TaskMaster</h1>
+    </header>
+
+    <div class="container">
+        <form action="/add_task" method="POST">
+            <input type="text" name="task_content" placeholder="New task..." required>
+            <button type="submit">Add Task</button>
+        </form>
+
+        <h2>Your To-Do List</h2>
+        <ul>
+            {% for todo in todos %}
+                <li class="todo-item {% if todo.done %}done{% endif %}">
+                    {{ todo.content }}
+                    {% if todo.done %}
+                        <span class="checkmark">&#10003;</span>
+                    {% endif %}
+                    <a href="{{ url_for('mark_done', task_id=todo.id) }}" style="background-color: #001F3D; color: white; padding: 5px 10px; border-radius: 5px; text-decoration: none;">Mark Done</a> |
+                    <a href="{{ url_for('delete_task', task_id=todo.id) }}" style="background-color: #001F3D; color: white; padding: 5px 10px; border-radius: 5px; text-decoration: none;">Delete</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="fab">
+        <a href="/add_task" style="color: white;">+</a>
+    </div>
+</body>
+</html>
